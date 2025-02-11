@@ -1,0 +1,36 @@
+# The material used for the deck, and card items. Change this to any valid Material name.
+deck-material: BOOK
+card-material: PAPER
+
+# The sound played when dealing a card.
+deal-sound: ITEM_BOOK_PAGE_TURN
+
+# The sound played when shuffling the deck.
+shuffle-sound: ITEM_BOOK_PAGE_TURN
+
+# Sound volume and pitch.
+sound-volume: 1.0
+sound-pitch: 1.5
+
+# Whether to send the player a message telling him what card he just dealt.
+show-deal-message: false
+
+# Displayed name of the deck
+deck:
+  name: "Deck of Cards"
+
+# Displayed name of card ranks
+cards:
+  ace: "Ace"
+  king: "King"
+  queen: "Queen"
+  jack: "Jack"
+  of: "of" # The word between the rank and the suit. (can be blank)
+
+# Displayed name of card suits
+# Spades: ♠  Hearts: ♡  Diamonds: ♦  Clubs: ♤
+suits:
+  spades: "Spades"
+  hearts: "Hearts"
+  diamonds: "Diamonds"
+  clubs: "Clubs"

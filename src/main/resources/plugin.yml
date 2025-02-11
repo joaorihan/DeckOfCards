@@ -1,0 +1,44 @@
+name: DeckOfCards
+version: '${project.version}'
+main: com.joaorihan.deckOfCards.DeckOfCards
+api-version: '1.21'
+load: STARTUP
+authors: [ Super ]
+description: Simple playing card plugin
+
+commands:
+  deck:
+    description: Get or give a deck of cards.
+    usage: /deck <get|give> [player]
+    aliases: [carddeck]
+    permission: deckofcards.use
+    permission-message: You do not have permission to use the /deck command.
+
+  deckreset:
+    description: Resets the deck you are currently holding.
+    usage: /deckreset
+    permission: deckofcards.reset
+    permission-message: You do not have permission to reset your deck.
+
+  deckdebug:
+    description: Displays the current order of cards in your held deck.
+    usage: /deckdebug
+    permission: deckofcards.debug
+    permission-message: You do not have permission to debug your deck.
+
+permissions:
+  deckofcards.use:
+    description: Allows the player to use the /deck command.
+    default: true
+  deckofcards.get:
+    description: Allows the player to get a deck for themselves using /deck get.
+    default: true
+  deckofcards.give:
+    description: Allows the player to give a deck to another player using /deck give <player>.
+    default: op
+  deckofcards.reset:
+    description: Allows the player to reset the deck they are holding using /deckreset.
+    default: true
+  deckofcards.debug:
+    description: Allows the player to debug the deck they are holding using /deckdebug.
+    default: op
