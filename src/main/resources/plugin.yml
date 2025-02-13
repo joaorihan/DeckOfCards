@@ -4,7 +4,7 @@ main: com.joaorihan.deckOfCards.DeckOfCards
 api-version: '1.21'
 load: STARTUP
 authors: [ Super ]
-description: Simple playing card plugin
+description: Simple deck of cards plugin
 
 commands:
   deck:
