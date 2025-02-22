@@ -105,7 +105,7 @@ cards:
   of: "of" # The word between the rank and the suit. (can be blank)
 
 # Displayed name of card suits
-# Spades: ♠  Hearts: ♡  Diamonds: ♦  Clubs: ♤
+# Spades: ♠  Hearts: ♡  Diamonds: ♦  Clubs: ♧
 suits:
   spades: "Spades"
   hearts: "Hearts"
