@@ -1,7 +1,7 @@
 name: DeckOfCards
-version: '${project.version}'
+version: '${version}'
 main: com.joaorihan.deckOfCards.DeckOfCards
-api-version: '1.21'
+api-version: '26.2'
 load: STARTUP
 authors: [ Super ]
 description: Simple deck of cards plugin

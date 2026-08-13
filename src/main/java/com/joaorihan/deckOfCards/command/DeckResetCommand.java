@@ -2,7 +2,6 @@ package com.joaorihan.deckOfCards.command;
 
 import com.joaorihan.deckOfCards.DeckOfCards;
 import com.joaorihan.deckOfCards.DeckUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -20,20 +19,20 @@ public class DeckResetCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage("This command can only be used by players.");
+            plugin.getMessageManager().send(sender, "command.player-only");
             return true;
         }
         if (!player.hasPermission("deckofcards.reset")) {
-            player.sendMessage(ChatColor.RED + "You do not have permission to reset your deck.");
+            plugin.getMessageManager().send(player, "reset.permission");
             return true;
         }
         ItemStack itemInHand = player.getInventory().getItemInMainHand();
         if (!DeckUtils.isDeck(itemInHand, plugin.getDeckKey())) {
-            player.sendMessage(ChatColor.RED + "You must be holding a deck to reset it.");
+            plugin.getMessageManager().send(player, "reset.must-hold-deck");
             return true;
         }
         DeckUtils.resetDeck(itemInHand, plugin.getDeckKey());
-        player.sendMessage(ChatColor.GREEN + "Your deck has been reset to full 52 cards.");
+        plugin.getMessageManager().send(player, "reset.success");
         return true;
     }
 }

@@ -1,3 +1,5 @@
 /DeckOfCards.iml
 /.idea/
+/.gradle/
+/build/
 /target/

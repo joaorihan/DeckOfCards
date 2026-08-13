@@ -2,7 +2,6 @@ package com.joaorihan.deckOfCards.command;
 
 import com.joaorihan.deckOfCards.DeckOfCards;
 import com.joaorihan.deckOfCards.DeckUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -22,25 +21,27 @@ public class DeckDebugCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage("This command can only be used by players.");
+            plugin.getMessageManager().send(sender, "command.player-only");
             return true;
         }
         if (!player.hasPermission("deckofcards.debug")) {
-            player.sendMessage(ChatColor.RED + "You do not have permission to debug your deck.");
+            plugin.getMessageManager().send(player, "debug.permission");
             return true;
         }
         ItemStack itemInHand = player.getInventory().getItemInMainHand();
         if (!DeckUtils.isDeck(itemInHand, plugin.getDeckKey())) {
-            player.sendMessage(ChatColor.RED + "You must be holding a deck to debug it.");
+            plugin.getMessageManager().send(player, "debug.must-hold-deck");
             return true;
         }
         List<String> deckCards = DeckUtils.getDeckCards(itemInHand, plugin.getDeckKey());
         if (deckCards.isEmpty()) {
-            player.sendMessage(ChatColor.YELLOW + "The deck is empty.");
+            plugin.getMessageManager().send(player, "debug.empty");
         } else {
-            player.sendMessage(ChatColor.AQUA + "Current deck order:");
+            plugin.getMessageManager().send(player, "debug.order");
             for (int i = 0; i < deckCards.size(); i++) {
-                player.sendMessage(ChatColor.GRAY + "" + (i + 1) + ". " + deckCards.get(i));
+                plugin.getMessageManager().send(player, "debug.card-entry",
+                        "position", i + 1,
+                        "card", deckCards.get(i));
             }
         }
         return true;

@@ -3,7 +3,11 @@ package com.joaorihan.deckOfCards.config;
 import com.joaorihan.deckOfCards.DeckOfCards;
 import lombok.Getter;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.Sound;
+
+import java.util.Locale;
 
 public class ConfigManager {
 
@@ -55,20 +59,11 @@ public class ConfigManager {
             cardMaterial = Material.PAPER;
         }
         // Load sound settings.
-        String dealSoundName = plugin.getConfig().getString("deal-sound", "ITEM_BOOK_PAGE_TURN").toUpperCase();
-        String shuffleSoundName = plugin.getConfig().getString("shuffle-sound", "ITEM_BOOK_PAGE_TURN").toUpperCase();
-        try {
-            dealSound = Sound.valueOf(dealSoundName);
-        } catch (IllegalArgumentException ex) {
-            plugin.getLogger().warning("Invalid deal-sound in config: " + dealSoundName + ". Using default ITEM_BOOK_PAGE_TURN.");
-            dealSound = Sound.ITEM_BOOK_PAGE_TURN;
-        }
-        try {
-            shuffleSound = Sound.valueOf(shuffleSoundName);
-        } catch (IllegalArgumentException ex) {
-            plugin.getLogger().warning("Invalid shuffle-sound in config: " + shuffleSoundName + ". Using default ITEM_BOOK_PAGE_TURN.");
-            shuffleSound = Sound.ITEM_BOOK_PAGE_TURN;
-        }
+        String dealSoundName = plugin.getConfig().getString("deal-sound", "minecraft:item.book.page_turn");
+        String shuffleSoundName = plugin.getConfig().getString("shuffle-sound", "minecraft:item.book.page_turn");
+        Sound defaultSound = Registry.SOUND_EVENT.getOrThrow(NamespacedKey.minecraft("item.book.page_turn"));
+        dealSound = resolveSound("deal-sound", dealSoundName, defaultSound);
+        shuffleSound = resolveSound("shuffle-sound", shuffleSoundName, defaultSound);
         soundVolume = (float) plugin.getConfig().getDouble("sound-volume", 1.0);
         soundPitch = (float) plugin.getConfig().getDouble("sound-pitch", 1.0);
         showDealMessage = plugin.getConfig().getBoolean("show-deal-message", false);
@@ -86,6 +81,30 @@ public class ConfigManager {
         diamonds = plugin.getConfig().getString("suits.diamonds", "Diamonds");
         clubs = plugin.getConfig().getString("suits.clubs", "Clubs");
 
+    }
+
+    private Sound resolveSound(String configKey, String configuredName, Sound fallback) {
+        String normalizedName = configuredName.toLowerCase(Locale.ROOT);
+        NamespacedKey soundKey = NamespacedKey.fromString(normalizedName);
+        Sound sound = soundKey == null ? null : Registry.SOUND_EVENT.get(soundKey);
+
+        // Keep enum-style values from older configurations working after the Paper migration.
+        if (sound == null) {
+            String legacyName = configuredName.toUpperCase(Locale.ROOT);
+            sound = Registry.SOUND_EVENT.keyStream()
+                    .filter(key -> key.getKey().toUpperCase(Locale.ROOT).replace('.', '_').equals(legacyName))
+                    .map(Registry.SOUND_EVENT::get)
+                    .findFirst()
+                    .orElse(null);
+        }
+
+        if (sound == null) {
+            plugin.getLogger().warning("Invalid " + configKey + " in config: " + configuredName
+                    + ". Using default minecraft:item.book.page_turn.");
+            return fallback;
+        }
+
+        return sound;
     }
 
 }

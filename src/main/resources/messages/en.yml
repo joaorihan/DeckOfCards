@@ -1,0 +1,31 @@
+command:
+  deck:
+    usage: "<red>Usage: /deck \\<get|give> [player]"
+    give-usage: "<red>Usage: /deck give \\<player>"
+    permission-get: "<red>You do not have permission to get a deck."
+    permission-give: "<red>You do not have permission to give decks."
+    received: "<green>You have received a new deck of cards!"
+    given: "<green>You have given a new deck of cards to <player>!"
+  player-only: "This command can only be used by players."
+  player-not-found: "<red>Player '<player>' not found."
+
+debug:
+  permission: "<red>You do not have permission to debug your deck."
+  must-hold-deck: "<red>You must be holding a deck to debug it."
+  empty: "<yellow>The deck is empty."
+  order: "<aqua>Current deck order:"
+  card-entry: "<gray><position>. <card>"
+
+reset:
+  permission: "<red>You do not have permission to reset your deck."
+  must-hold-deck: "<red>You must be holding a deck to reset it."
+  success: "<green>Your deck has been reset to full 52 cards."
+
+deck:
+  empty: "<red>The deck is empty!"
+  empty-shuffle: "<red>The deck is empty; cannot shuffle."
+  shuffled: "<aqua>The deck has been shuffled!"
+  dealt: "<yellow>You dealt: <card>"
+
+card:
+  added: "<green>Card added to deck: <card>"

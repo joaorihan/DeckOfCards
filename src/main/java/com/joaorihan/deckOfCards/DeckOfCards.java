@@ -7,6 +7,7 @@ import com.joaorihan.deckOfCards.command.tab.DeckTabCompleter;
 import com.joaorihan.deckOfCards.config.ConfigManager;
 import com.joaorihan.deckOfCards.listener.DeckInteractListener;
 import com.joaorihan.deckOfCards.listener.DeckInventoryListener;
+import com.joaorihan.deckOfCards.message.MessageManager;
 import lombok.Getter;
 import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -16,6 +17,7 @@ public class DeckOfCards extends JavaPlugin {
 
     private NamespacedKey deckKey;
     private ConfigManager configManager;
+    private MessageManager messageManager;
 
     @Override
     public void onEnable() {
@@ -23,6 +25,9 @@ public class DeckOfCards extends JavaPlugin {
         configManager = new ConfigManager(this);
         DeckUtils.setConfigManager(configManager);
         DeckUtils.updateValidCards();
+
+        // Load the default English message catalog.
+        messageManager = new MessageManager(this);
 
         // Create a namespaced key for storing deck data.
         deckKey = new NamespacedKey(this, "deck_cards");
