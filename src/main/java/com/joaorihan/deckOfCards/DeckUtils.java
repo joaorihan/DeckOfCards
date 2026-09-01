@@ -2,7 +2,9 @@ package com.joaorihan.deckOfCards;
 
 import com.joaorihan.deckOfCards.config.ConfigManager;
 import lombok.Setter;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -16,6 +18,8 @@ import java.util.List;
 import java.util.Set;
 
 public class DeckUtils {
+
+    private static final PlainTextComponentSerializer PLAIN_TEXT = PlainTextComponentSerializer.plainText();
 
     @Setter
     private static ConfigManager configManager;
@@ -39,8 +43,8 @@ public class DeckUtils {
         if (item == null) return false;
         if (!item.hasItemMeta()) return false;
         ItemMeta meta = item.getItemMeta();
-        if (!meta.hasDisplayName()) return false;
-        if (!meta.getDisplayName().equals(configManager.getDeckName())) return false;
+        String displayName = getPlainDisplayName(item);
+        if (!configManager.getDeckName().equals(displayName)) return false;
 
         PersistentDataContainer container = meta.getPersistentDataContainer();
         return container.has(deckKey, PersistentDataType.STRING);
@@ -52,7 +56,7 @@ public class DeckUtils {
     public static ItemStack createNewDeck(NamespacedKey deckKey) {
         ItemStack deck = new ItemStack(configManager.getDeckMaterial());
         ItemMeta meta = deck.getItemMeta();
-        meta.setDisplayName(configManager.getDeckName());
+        meta.displayName(Component.text(configManager.getDeckName()));
         List<String> cards = getCards();
 
         // Save the list as a semicolon-separated string.
@@ -61,9 +65,7 @@ public class DeckUtils {
         container.set(deckKey, PersistentDataType.STRING, cardData);
 
         // Set lore to show how many cards remain.
-        List<String> lore = new ArrayList<>();
-        lore.add(ChatColor.GRAY + "Cards remaining: " + cards.size());
-        meta.setLore(lore);
+        updateLore(meta, cards.size());
         deck.setItemMeta(meta);
         return deck;
     }
@@ -121,10 +123,7 @@ public class DeckUtils {
 
         container.set(deckKey, PersistentDataType.STRING, cardData);
         // Update lore to show the remaining count.
-        List<String> lore = new ArrayList<>();
-        lore.add(ChatColor.GRAY + "Cards remaining: " + cards.size());
-
-        meta.setLore(lore);
+        updateLore(meta, cards.size());
         deck.setItemMeta(meta);
     }
 
@@ -139,9 +138,7 @@ public class DeckUtils {
 
         String cardData = String.join(";", cards);
         meta.getPersistentDataContainer().set(deckKey, PersistentDataType.STRING, cardData);
-        List<String> lore = new ArrayList<>();
-        lore.add(ChatColor.GRAY + "Cards remaining: " + cards.size());
-        meta.setLore(lore);
+        updateLore(meta, cards.size());
         deck.setItemMeta(meta);
     }
 
@@ -152,14 +149,22 @@ public class DeckUtils {
     public static boolean isValidCard(ItemStack item) {
         if (item == null) return false;
         if (item.getType() != configManager.getCardMaterial()) return false;
-        if (!item.hasItemMeta()) return false;
-        ItemMeta meta = item.getItemMeta();
-        if (!meta.hasDisplayName()) return false;
-
-        String name = meta.getDisplayName();
-        // Remove any color codes before checking.
-        String plainName = ChatColor.stripColor(name);
+        String plainName = getPlainDisplayName(item);
         return validCards.contains(plainName);
+    }
+
+    /**
+     * Returns an item's display name without formatting, or null if it has no custom name.
+     */
+    public static String getPlainDisplayName(ItemStack item) {
+        if (item == null || !item.hasItemMeta()) return null;
+
+        Component displayName = item.getItemMeta().displayName();
+        return displayName == null ? null : PLAIN_TEXT.serialize(displayName);
+    }
+
+    private static void updateLore(ItemMeta meta, int cardsRemaining) {
+        meta.lore(List.of(Component.text("Cards remaining: " + cardsRemaining, NamedTextColor.GRAY)));
     }
 
 }

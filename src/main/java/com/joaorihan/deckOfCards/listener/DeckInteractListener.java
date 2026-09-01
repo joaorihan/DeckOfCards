@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.joaorihan.deckOfCards.DeckOfCards;
 import com.joaorihan.deckOfCards.DeckUtils;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Item;
@@ -45,18 +45,18 @@ public class DeckInteractListener implements Listener {
             if (player.isSneaking()) {
                 // Prevent shuffling if the deck is empty.
                 if (deckCards.isEmpty()) {
-                    player.sendMessage(ChatColor.RED + "The deck is empty; cannot shuffle.");
+                    plugin.getMessageManager().send(player, "deck.empty-shuffle");
                     return;
                 }
                 // Shuffle the deck.
                 Collections.shuffle(deckCards);
                 DeckUtils.setDeckCards(item, plugin.getDeckKey(), deckCards);
-                player.sendMessage(ChatColor.AQUA + "The deck has been shuffled!");
+                plugin.getMessageManager().send(player, "deck.shuffled");
                 playSoundNearby(player, plugin.getConfigManager().getShuffleSound());
             } else {
                 // Deal (remove) a card from the deck.
                 if (deckCards.isEmpty()) {
-                    player.sendMessage(ChatColor.RED + "The deck is empty!");
+                    plugin.getMessageManager().send(player, "deck.empty");
                     return;
                 }
                 String card = deckCards.removeFirst(); // Remove the top card.
@@ -65,7 +65,7 @@ public class DeckInteractListener implements Listener {
                 // Create an item representing the dealt card.
                 ItemStack cardItem = new ItemStack(plugin.getConfigManager().getCardMaterial());
                 ItemMeta meta = cardItem.getItemMeta();
-                meta.setDisplayName(card);
+                meta.displayName(Component.text(card));
                 cardItem.setItemMeta(meta);
 
                 // Throw the card in the direction the player is facing.
@@ -78,7 +78,7 @@ public class DeckInteractListener implements Listener {
 
                 // Send deal message only if enabled in config.
                 if (plugin.getConfigManager().isShowDealMessage()) {
-                    player.sendMessage(ChatColor.YELLOW + "You dealt: " + card);
+                    plugin.getMessageManager().send(player, "deck.dealt", "card", card);
                 }
             }
         }

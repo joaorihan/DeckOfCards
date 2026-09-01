@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.joaorihan.deckOfCards.DeckOfCards;
 import com.joaorihan.deckOfCards.DeckUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -32,13 +31,13 @@ public class DeckInventoryListener implements Listener {
 
         // If the player is holding a valid card on their cursor, add it to the deck.
         if (DeckUtils.isValidCard(cursorItem)) {
-            String cardName = cursorItem.getItemMeta().getDisplayName();
+            String cardName = DeckUtils.getPlainDisplayName(cursorItem);
             List<String> deckCards = DeckUtils.getDeckCards(currentItem, plugin.getDeckKey());
             deckCards.add(cardName);
             DeckUtils.setDeckCards(currentItem, plugin.getDeckKey(), deckCards);
-            player.sendMessage(ChatColor.GREEN + "Card added to deck: " + cardName);
+            plugin.getMessageManager().send(player, "card.added", "card", cardName);
             // Remove the card from the cursor.
-            event.setCursor(null);
+            event.getView().setCursor(null);
             event.setCancelled(true);
         }
     }

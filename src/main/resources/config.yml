@@ -3,10 +3,10 @@ deck-material: BOOK
 card-material: PAPER
 
 # The sound played when dealing a card.
-deal-sound: ITEM_BOOK_PAGE_TURN
+deal-sound: minecraft:item.book.page_turn
 
 # The sound played when shuffling the deck.
-shuffle-sound: ITEM_BOOK_PAGE_TURN
+shuffle-sound: minecraft:item.book.page_turn
 
 # Sound volume and pitch.
 sound-volume: 1.0

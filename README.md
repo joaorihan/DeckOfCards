@@ -4,11 +4,11 @@
 
 ### About
 
-**DeckOfCards** is a Spigot plugin that introduces a physical, fully functional, customizable deck of 52 cards into Minecraft. Players can obtain, manage, shuffle, and debug decks directly in-game, making it perfect for integrating card games or interactive mechanics on your server.
+**DeckOfCards** is a Paper plugin that introduces a physical, fully functional, customizable deck of 52 cards into Minecraft. Players can obtain, manage, shuffle, and debug decks directly in-game, making it perfect for integrating card games or interactive mechanics on your server.
 
 ### Purpose
 
-DeckOfCards provides a flexible framework for card-based interactions on Spigot/Paper servers. Whether you’re creating mini-games, role-playing scenarios, or gambling systems, this plugin allows you to easily incorporate card mechanics with fully configurable card names, deck items, and sound effects.
+DeckOfCards provides a flexible framework for card-based interactions on Paper servers. Whether you’re creating mini-games, role-playing scenarios, or gambling systems, this plugin allows you to easily incorporate card mechanics with fully configurable card names, deck items, and sound effects.
 
 ---
 
@@ -52,8 +52,8 @@ DeckOfCards provides a flexible framework for card-based interactions on Spigot/
 
 ### Requirements
 
-- Spigot or Paper 1.21
-- Java 21 or higher
+- Paper 26.2 or newer
+- Java 25 or newer
 
 ---
 
@@ -80,10 +80,10 @@ deck-material: BOOK
 card-material: PAPER
 
 # The sound played when dealing a card.
-deal-sound: ITEM_BOOK_PAGE_TURN
+deal-sound: minecraft:item.book.page_turn
 
 # The sound played when shuffling the deck.
-shuffle-sound: ITEM_BOOK_PAGE_TURN
+shuffle-sound: minecraft:item.book.page_turn
 
 # Sound volume and pitch.
 sound-volume: 1.0
@@ -122,13 +122,31 @@ suits:
 
 ---
 
+## Message formatting
+
+User-facing messages are stored in `src/main/resources/messages/en.yml` and use MiniMessage formatting.
+
+Examples:
+
+```yaml
+deck:
+  shuffled: "<aqua>The deck has been shuffled!"
+  dealt: "<yellow>You dealt: <card>"
+```
+
+Supported message placeholders include `<card>`, `<player>`, and `<position>`. Placeholder values are inserted as plain text, so formatting tags inside dynamic values are not interpreted. To display a literal angle bracket, escape it with a backslash, such as `\\<player>`.
+
+Only text formatting is enabled for message catalogs; interactive tags such as click and hover actions are not processed.
+
+---
+
 ## Troubleshooting
 
 **Deck Commands Not Working?**
 
 - Ensure you are holding the correct deck item in your main hand.
 - Verify that your `config.yml` is correctly set up.
-- Confirm that your server is running Spigot/Paper 1.21 or higher.
+- Confirm that your server is running Paper 26.2 or newer.
 - Double-check that your permissions are correctly assigned.
 
 ---
@@ -142,11 +160,11 @@ suits:
 
 2. **Build the plugin:**
    ```bash
-   mvn clean package
+   ./gradlew clean build
    ```
 
 3. **Deploy the JAR:**
-   Find the generated JAR in the `target` directory and place it in your server's `plugins` folder.
+   On Windows, run `gradlew.bat clean build` instead. Find the generated JAR in the `build/libs` directory and place it in your server's `plugins` folder.
 
 ---
 
